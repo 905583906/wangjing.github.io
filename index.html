@@ -5,12 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>录音测试</title>
+  <title>录音测试 Github Pages</title>
 	<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
 	<script src="js/recorder.mp3.min.js"></script>
 </head>
+<style>
+	input[type = "button"] {
+		width : 100%;
+		height:45px;
+		line-height 45px;
+	}
+</style>
 <body>
-  <input onclick="start()" type="button" value="开始" />
+  <input onclick="start()" type="button" value="开始录音" />
 </body>
 <script>
 
@@ -19,7 +26,7 @@ var rec=Recorder();//使用默认配置，mp3格式
 function start(){
 	rec.open(function(){//打开麦克风授权获得相关资源
     rec.start();//开始录音
-		(function(){
+		setTimeout(function(){
 			rec.stop(function(blob,duration){//到达指定条件停止录音
 				console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
 				rec.close();//释放录音资源
