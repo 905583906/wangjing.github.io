@@ -17,6 +17,9 @@
 	body{
 		text-align:center;
 		padding:10px 50px 0 50px;
+		box-sizing:border-box;
+		-moz-box-sizing:border-box; /* Firefox */
+		-webkit-box-sizing:border-box; /* Safari */
 	}
 	input[type = "button"] {
 		width : 100%;
@@ -28,10 +31,12 @@
 	<!-- controls -->
 	<audio controls autoplay="autoplay" id="audio" src=""></audio>
 	<input onclick="start()" type="button" value="开始录音" />
+	<input onclick="play()" type="button" value="播放录音" />
 </body>
 <script>
 
 var rec=Recorder();//使用默认配置，mp3格式
+var _blob = null;
 
 function start(){
 	rec.open(function(){//打开麦克风授权获得相关资源
@@ -50,6 +55,8 @@ function start(){
 				<!-- audio.src=URL.createObjectURL(blob); -->
 				<!-- audio.play(); -->
 				
+				_blob = blob;
+				
 				var audio = document.getElementById('audio');
 				audio.src=URL.createObjectURL(blob);
 				audio.play();
@@ -61,6 +68,16 @@ function start(){
 	},function(msg,isUserNotAllow){//用户拒绝未授权或不支持
 		console.log((isUserNotAllow?"UserNotAllow，":"")+"无法录音:"+msg);
 	});
+}
+
+function play(){
+	if(_blob){
+		var audio = document.getElementById('audio');
+		audio.src=URL.createObjectURL(_blob);
+		audio.play();
+	}else{
+		alert("请先点击开始录音");
+	}
 }
 
 </script>
