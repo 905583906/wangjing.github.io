@@ -40,22 +40,20 @@
 </body>
 <script>
 
-var rec;
+var type="amr";
+var bit=+16;
+var sample=+16000;
+var rec=Recorder({
+	type:"amr"
+	,bitRate:bit
+	,sampleRate:sample
+	,onProcess:function(buffers,level,time,sampleRate){
+		
+	}
+});
 var _blob = null;
 
-function start(){
-	var type="amr";
-	var bit=+16;
-	var sample=+16000;
-	rec=Recorder({
-		type:"amr"
-		,bitRate:bit
-		,sampleRate:sample
-		,onProcess:function(buffers,level,time,sampleRate){
-			
-		}
-	});
-	
+function start(){	
 	rec.open(function(){//打开麦克风授权获得相关资源
     rec.start();//开始录音
 		setTimeout(function(){
