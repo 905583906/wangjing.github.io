@@ -40,8 +40,6 @@
 	<input onclick="upload()" type="button" value="上传4" />
 </body>
 <script>
-
-
 var rec;
 function recopen(){
 	var type="amr";
@@ -70,24 +68,26 @@ function recopen(){
 var _blob = null;
 
 function start(){
-    rec.start();//开始录音
-	setTimeout(function(){
-		rec.stop(function(blob,duration){//到达指定条件停止录音
-			//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
-			console.log("时长:"+duration+"ms");
-			rec.close();//释放录音资源
+	if(rec){
+		rec.start();//开始录音
+		setTimeout(function(){
+			rec.stop(function(blob,duration){//到达指定条件停止录音
+				//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
+				console.log("时长:"+duration+"ms");
+				rec.close();//释放录音资源
+				
+				_blob = blob;
+				
+				/*立即播放例子*/
+				var audio = document.getElementById('audio');
+				audio.src=URL.createObjectURL(blob);
+				audio.play();
 			
-			_blob = blob;
-			
-			/*立即播放例子*/
-			var audio = document.getElementById('audio');
-			audio.src=URL.createObjectURL(blob);
-			audio.play();
-		
-		},function(msg){
-			console.log("录音失败:"+msg);
-		});
-	},3000);
+			},function(msg){
+				console.log("录音失败:"+msg);
+			});
+		},3000);
+	}
 }
 
 function play(){
@@ -122,6 +122,9 @@ function upload(){
 	});
 }
 
-recopen();
+$(function(){
+	recopen();
+});
+
 </script>
 </html>
