@@ -37,50 +37,57 @@
 	<audio controls id="audio" src=""></audio>
 	<input onclick="start()" type="button" value="开始录音" />
 	<input onclick="play()" type="button" value="播放录音" />
-	<input onclick="upload()" type="button" value="上传3" />
+	<input onclick="upload()" type="button" value="上传4" />
 </body>
 <script>
 
-var type="amr";
-var bit=+16;
-var sample=+16000;
-var rec=Recorder({
-	type:"amr"
-	,bitRate:bit
-	,sampleRate:sample
-	,onProcess:function(buffers,level,time,sampleRate){
-		
-	}
-});
-var _blob = null;
 
-function start(){	
-	rec.open(function(){//打开麦克风授权获得相关资源
-    rec.start();//开始录音
-		setTimeout(function(){
-			rec.stop(function(blob,duration){//到达指定条件停止录音
-				//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
-				console.log("时长:"+duration+"ms");
-				rec.close();//释放录音资源
-				
-				_blob = blob;
-				
-				/*立即播放例子*/
-				var audio = document.getElementById('audio');
-				audio.src=URL.createObjectURL(blob);
-				audio.play();
+var rec;
+function recopen(){
+	var type="amr";
+	var bit=16;
+	var sample=16000;
+	var rec=Recorder({
+		type:"amr"
+		,bitRate:bit
+		,sampleRate:sample
+		,onProcess:function(buffers,level,time,sampleRate){
 			
-			},function(msg){
-				console.log("录音失败:"+msg);
-			});
-		},3000);
-	},function(msg,isUserNotAllow){//用户拒绝未授权或不支持
-		console.log((isUserNotAllow?"UserNotAllow，":"")+"无法录音:"+msg);
+		}
 	});
-		
+	
+	rec.open(function(){//打开麦克风授权获得相关资源
+		console.log("已打开:"+type+" "+bit+"kbps");
+	},function(e,isUserNotAllow){
+		reclog((isUserNotAllow?"UserNotAllow，":"")+"打开失败："+e);
+	});
+	
 	window.waitDialogClick=function(){
 		console.log("打开失败：权限请求被忽略，<span style='color:#f00'>用户主动点击的弹窗</span>");
-	};	
+	};
+}
+
+var _blob = null;
+
+function start(){
+    rec.start();//开始录音
+	setTimeout(function(){
+		rec.stop(function(blob,duration){//到达指定条件停止录音
+			//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
+			console.log("时长:"+duration+"ms");
+			rec.close();//释放录音资源
+			
+			_blob = blob;
+			
+			/*立即播放例子*/
+			var audio = document.getElementById('audio');
+			audio.src=URL.createObjectURL(blob);
+			audio.play();
+		
+		},function(msg){
+			console.log("录音失败:"+msg);
+		});
+	},3000);
 }
 
 function play(){
@@ -114,5 +121,7 @@ function upload(){
 		}
 	});
 }
+
+recopen();
 </script>
 </html>
