@@ -41,29 +41,6 @@
 <script>
 
 var rec;
-function recopen(){		
-	var type="amr";
-	var bit=+16;
-	var sample=+16000;
-	rec=Recorder({
-		type:"amr"
-		,bitRate:bit
-		,sampleRate:sample
-		,onProcess:function(buffers,level,time,sampleRate){
-			
-		}
-	});
-	
-	rec.open(function(){
-		reclog("已打开:"+type+" "+bit+"kbps");
-	},function(e,isUserNotAllow){
-		reclog((isUserNotAllow?"UserNotAllow，":"")+"打开失败："+e);
-	});
-	
-	window.waitDialogClick=function(){
-		reclog("打开失败：权限请求被忽略，<span style='color:#f00'>用户主动点击的弹窗</span>");
-	};	
-}
 var _blob = null;
 
 function start(){
@@ -101,8 +78,7 @@ function start(){
 	},function(msg,isUserNotAllow){//用户拒绝未授权或不支持
 		console.log((isUserNotAllow?"UserNotAllow，":"")+"无法录音:"+msg);
 	});
-	
-	
+		
 	window.waitDialogClick=function(){
 		console.log("打开失败：权限请求被忽略，<span style='color:#f00'>用户主动点击的弹窗</span>");
 	};	
