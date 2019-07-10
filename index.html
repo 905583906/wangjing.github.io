@@ -36,11 +36,15 @@
 	<audio controls autoplay="autoplay" id="audio" src=""></audio>
 	<input onclick="start()" type="button" value="开始录音" />
 	<input onclick="play()" type="button" value="播放录音" />
+	<input onclick="upload()" type="button" value="上传" />
 </body>
 <script>
 
 
-var rec=Recorder();//使用默认配置，mp3格式
+var rec=Recorder(
+	{
+		type:"amr"
+	});//使用默认配置，mp3格式
 var _blob = null;
 
 function start(){
@@ -77,6 +81,12 @@ function play(){
 	}else{
 		alert("请先点击开始录音");
 	}
+}
+
+function upload(){
+	$.ajax({
+	
+	})
 }
 
 </script>
