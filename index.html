@@ -37,92 +37,92 @@
 	<audio controls id="audio" src=""></audio>
 	<input onclick="start()" type="button" value="开始录音" />
 	<input onclick="play()" type="button" value="播放录音" />
-	<input onclick="upload()" type="button" value="上传6" />
+	<input onclick="upload()" type="button" value="上传7" />
 </body>
 <script>
 
+var rec;
+function recopen(){
+	var type="amr";
+	var bit=16;
+	var sample=16000;
+	rec=Recorder({
+		type:"amr"
+		,bitRate:bit
+		,sampleRate:sample
+		,onProcess:function(buffers,level,time,sampleRate){
+			
+		}
+	});
+	
+	rec.open(function(){//打开麦克风授权获得相关资源
+		console.log("已打开:"+type+" "+bit+"kbps");
+	},function(e,isUserNotAllow){
+		reclog((isUserNotAllow?"UserNotAllow，":"")+"打开失败："+e);
+	});
+	
+	window.waitDialogClick=function(){
+		console.log("打开失败：权限请求被忽略，<span style='color:#f00'>用户主动点击的弹窗</span>");
+	};
+}
+
+var _blob = null;
+
+function start(){
+	if(rec){
+		rec.start();//开始录音
+		setTimeout(function(){
+			rec.stop(function(blob,duration){//到达指定条件停止录音
+				//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
+				console.log("时长:"+duration+"ms");
+				rec.close();//释放录音资源
+				
+				_blob = blob;
+				
+				/*立即播放例子*/
+				var audio = document.getElementById('audio');
+				audio.src=URL.createObjectURL(blob);
+				audio.play();
+			
+			},function(msg){
+				console.log("录音失败:"+msg);
+			});
+		},3000);
+	}
+}
+
+function play(){
+	if(_blob){
+		var audio = document.getElementById('audio');
+		audio.src=URL.createObjectURL(_blob);
+		audio.play();
+	}else{
+		alert("请先点击开始录音");
+	}
+}
+
+function upload(){
+	var formData = new FormData();
+	let access_token= '23_rZaOT5qq1fAuz2hZAhnhAnbR5NiafvuUC1ViFCCEyXH-3bA6UqlThM2U3PvhI5NupVllJ5nlZP-hGo9bST4nYGdFRhlZrj-0jjL5uym4FkvKFc37gV1f-7iW4Ta1eQick9nKGcFmFZQkBBg4LNQfAEAACF';	
+	var form=new FormData();
+	form.append('access_token', access_token);
+	form.append('type', 'voice');
+	form.append("media",blob,"recorder.mp3"); //和普通form表单并无二致，后端接收到upfile参数的文件，文件名为recorder.mp3
+	$.ajax({
+		url:'http://file.api.weixin.qq.com/cgi-bin/media/upload' //上传接口地址
+		,type:"POST"
+		,contentType:false //让xhr自动处理Content-Type header，multipart/form-data需要生成随机的boundary
+		,processData:false //不要处理data，让xhr自动处理
+		,data:form
+		,success:function(v){
+			console.log("上传成功",v);
+		}
+		,error:function(s){
+			console.error("上传失败",s);
+		}
+	});
+}
 $(function(){
-	var rec;
-	function recopen(){
-		var type="amr";
-		var bit=16;
-		var sample=16000;
-		rec=Recorder({
-			type:"amr"
-			,bitRate:bit
-			,sampleRate:sample
-			,onProcess:function(buffers,level,time,sampleRate){
-				
-			}
-		});
-		
-		rec.open(function(){//打开麦克风授权获得相关资源
-			console.log("已打开:"+type+" "+bit+"kbps");
-		},function(e,isUserNotAllow){
-			reclog((isUserNotAllow?"UserNotAllow，":"")+"打开失败："+e);
-		});
-		
-		window.waitDialogClick=function(){
-			console.log("打开失败：权限请求被忽略，<span style='color:#f00'>用户主动点击的弹窗</span>");
-		};
-	}
-
-	var _blob = null;
-
-	function start(){
-		if(rec){
-			rec.start();//开始录音
-			setTimeout(function(){
-				rec.stop(function(blob,duration){//到达指定条件停止录音
-					//console.log(URL.createObjectURL(blob),"时长:"+duration+"ms");
-					console.log("时长:"+duration+"ms");
-					rec.close();//释放录音资源
-					
-					_blob = blob;
-					
-					/*立即播放例子*/
-					var audio = document.getElementById('audio');
-					audio.src=URL.createObjectURL(blob);
-					audio.play();
-				
-				},function(msg){
-					console.log("录音失败:"+msg);
-				});
-			},3000);
-		}
-	}
-
-	function play(){
-		if(_blob){
-			var audio = document.getElementById('audio');
-			audio.src=URL.createObjectURL(_blob);
-			audio.play();
-		}else{
-			alert("请先点击开始录音");
-		}
-	}
-
-	function upload(){
-		var formData = new FormData();
-		let access_token= '23_rZaOT5qq1fAuz2hZAhnhAnbR5NiafvuUC1ViFCCEyXH-3bA6UqlThM2U3PvhI5NupVllJ5nlZP-hGo9bST4nYGdFRhlZrj-0jjL5uym4FkvKFc37gV1f-7iW4Ta1eQick9nKGcFmFZQkBBg4LNQfAEAACF';	
-		var form=new FormData();
-		form.append('access_token', access_token);
-		form.append('type', 'voice');
-		form.append("media",blob,"recorder.mp3"); //和普通form表单并无二致，后端接收到upfile参数的文件，文件名为recorder.mp3
-		$.ajax({
-			url:'http://file.api.weixin.qq.com/cgi-bin/media/upload' //上传接口地址
-			,type:"POST"
-			,contentType:false //让xhr自动处理Content-Type header，multipart/form-data需要生成随机的boundary
-			,processData:false //不要处理data，让xhr自动处理
-			,data:form
-			,success:function(v){
-				console.log("上传成功",v);
-			}
-			,error:function(s){
-				console.error("上传失败",s);
-			}
-		});
-	}
 	recopen();
 });
 
