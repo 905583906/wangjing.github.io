@@ -43,8 +43,10 @@
 
 var rec=Recorder(
 	{
-		type:"amr"
-	});//使用默认配置，mp3格式
+		type:"amr",
+		bitRate:16,
+		sampleRate:16000		
+	});
 var _blob = null;
 
 function start(){
@@ -84,8 +86,25 @@ function play(){
 }
 
 function upload(){
+	var formData = new FormData();
+	let access_token= '23_rZaOT5qq1fAuz2hZAhnhAnbR5NiafvuUC1ViFCCEyXH-3bA6UqlThM2U3PvhI5NupVllJ5nlZP-hGo9bST4nYGdFRhlZrj-0jjL5uym4FkvKFc37gV1f-7iW4Ta1eQick9nKGcFmFZQkBBg4LNQfAEAACF';
+	let datas = {'access_token': access_token, 'type': 'voice'};
+	formData.append('access_token', access_token);
+	formData.append('type', 'voice');
+	formData.append('media', _blob);
 	$.ajax({
-	
+		url:'http://file.api.weixin.qq.com/cgi-bin/media/upload',
+		type: 'POST',
+		data: formData,
+		success: function(result){
+            console.log("success"+result);
+		},
+        error:function (result) {
+           console.log("error="+result);
+		},
+        fail:function (result) {
+            console.log("fail"+result);
+		}
 	})
 }
 
