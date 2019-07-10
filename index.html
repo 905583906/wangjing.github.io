@@ -43,9 +43,14 @@
 
 var rec=Recorder(
 	{
-		type:"amr",
-		bitRate:16,
-		sampleRate:16000		
+		type:"amr"
+		,bitRate:16
+		,sampleRate:16000
+		,onProcess:function(buffers,level,time,sampleRate){
+			
+			console.log(time+"/"+level);
+			
+		}
 	});
 var _blob = null;
 
