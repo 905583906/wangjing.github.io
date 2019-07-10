@@ -6,12 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>录音测试 Github Pages</title>
-	<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
 	<!--script src="js/recorder.mp3.min.js"></script-->
-	<script src="js/recorder-core.js"></script> <!--必须引入的录音核心-->
-	<script src="js/beta-amr.js"></script> <!--相应格式支持文件-->
-	<script src="js/beta-amr-engine.js"></script> <!--如果此格式有额外的编码引擎的话，也要加上-->
-	<script src="js/wav.js"></script>
 </head>
 <style>
 	html,body{
@@ -33,12 +28,19 @@
 	}
 </style>
 <body>
+	<script src="js/recorder-core.js"></script> <!--必须引入的录音核心-->
+	<script src="js/beta-amr.js"></script> <!--相应格式支持文件-->
+	<script src="js/beta-amr-engine.js"></script> <!--如果此格式有额外的编码引擎的话，也要加上-->
+	<script src="js/wav.js"></script>
+	
+	
+	<script src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+	
 	<!-- controls autoplay="autoplay"-->
 	<audio controls id="audio" src=""></audio>
 	<input onclick="start()" type="button" value="开始录音" />
 	<input onclick="play()" type="button" value="播放录音" />
 	<input onclick="upload()" type="button" value="上传7" />
-</body>
 <script>
 
 var rec;
@@ -125,4 +127,5 @@ $(function(){
 });
 
 </script>
+</body>
 </html>
